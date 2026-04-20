@@ -2,10 +2,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
+  margin: 0;
   background: #0f172a;
   color: white;
   font-family: sans-serif;
@@ -13,34 +19,66 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 10px;
 }
 
 .box {
   background: #1e293b;
-  padding: 30px;
+  padding: 25px;
   border-radius: 15px;
-  width: 300px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 input {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   margin: 10px 0;
   border-radius: 10px;
   border: none;
+  font-size: 16px;
 }
 
 button {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   border-radius: 10px;
   border: none;
-  background: #22c55e;
-  color: white;
+  font-size: 16px;
   font-weight: bold;
   margin-top: 5px;
+  cursor: pointer;
+}
+
+button:first-of-type {
+  background: #22c55e; /* login */
+}
+
+button:last-of-type {
+  background: #3b82f6; /* register */
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 500px) {
+  .box {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
 }
 </style>
+
 </head>
 
 <body>
