@@ -204,6 +204,11 @@ if (!token) {
   window.location.href = "/login.html";
 }
 
+// FORMAT RUPIAH
+function formatRupiah(angka) {
+  return new Intl.NumberFormat("id-ID").format(angka);
+}
+
 // LOAD DATA
 async function loadData() {
   const res = await fetch(API_URL + "/transactions", {
@@ -222,7 +227,7 @@ async function loadData() {
       <div class="item-right">
         <span class="amount ${item.type === 'income' ? 'income-text' : 
 'expense-text'}">
-          Rp ${item.amount}
+          Rp ${formatRupiah(item.amount)}
         </span>
         <button class="delete" 
 onclick="deleteData('${item._id}')">🗑</button>
@@ -249,8 +254,15 @@ async function addTransaction(type) {
       "Content-Type": "application/json",
       Authorization: token
     },
-    body: JSON.stringify({ title, amount, type })
+    body: JSON.stringify({
+      title,
+      amount: Number(amount),
+      type
+    })
   });
+
+  document.getElementById("title").value = "";
+  document.getElementById("amount").value = "";
 
   loadData();
   loadStats();
@@ -275,9 +287,11 @@ async function loadStats() {
 
   const data = await res.json();
 
-  document.getElementById("income").innerText = data.income;
-  document.getElementById("expense").innerText = data.expense;
-  document.getElementById("balance").innerText = data.balance;
+  document.getElementById("income").innerText = formatRupiah(data.income);
+  document.getElementById("expense").innerText = 
+formatRupiah(data.expense);
+  document.getElementById("balance").innerText = 
+formatRupiah(data.balance);
 }
 
 // LOGOUT
