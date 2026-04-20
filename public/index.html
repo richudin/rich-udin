@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>UDIN FINANCE</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#22c55e">
+<button onclick="logout()" style="
+  float: right;
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+">
+  Keluar
+</button>
+
+<style>
+* {
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  padding: 25px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  animation: fadeDown 0.6s ease;
+}
+
+.balance {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.summary span {
+  font-weight: bold;
+}
+
+.summary div:first-child span { color: #4ade80; }
+.summary div:last-child span { color: #f87171; }
+
+/* CONTAINER */
+.container {
+  padding: 15px;
+  max-width: 500px;
+  margin: auto;
+}
+
+/* CARD */
+.card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  animation: fadeUp 0.5s ease;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #334155;
+  color: white;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #22c55e;
+}
+
+/* BUTTON */
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-income {
+  flex: 1;
+  background: #22c55e;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-expense {
+  flex: 1;
+  background: #ef4444;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+/* LIST */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #334155;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeUp 0.3s ease;
+}
+
+.income { color: #4ade80; }
+.expense { color: #f87171; }
+
+/* DELETE */
+.delete {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.delete:hover {
+  color: white;
+  transform: scale(1.2);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div>💰 UDIN FINANCE</div>
+  <div class="balance" id="balance">Rp 0</div>
+
+  <div class="summary">
+    <div>Masuk: <span id="income">Rp 0</span></div>
+    <div>Keluar: <span id="expense">Rp 0</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h3>Tambah Transaksi</h3>
+
+    <input id="title" placeholder="Keterangan">
+    <input id="amount" type="number" placeholder="Jumlah">
+
+    <div class="row">
+      <button class="btn-income" onclick="addIncome()">+ 
+Pemasukan</button>
+      <button class="btn-expense" onclick="addExpense()">- 
+Pengeluaran</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Pemasukan</h3>
+    <ul id="income-list"></ul>
+  </div>
+
+  <div class="card">
+    <h3>Pengeluaran</h3>
+    <ul id="expense-list"></ul>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
