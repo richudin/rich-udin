@@ -1,22 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UDIN FINANCE</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#22c55e">
-<button onclick="logout()" style="
-  float: right;
-  background: transparent;
-  border: 1px solid white;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-">
-  Keluar
-</button>
 
 <style>
 * {
@@ -31,23 +18,57 @@ body {
   padding: 10px;
 }
 
+/* CONTAINER */
 .container {
-  width: 100%;
   max-width: 500px;
   margin: auto;
 }
 
-/* SALDO */
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.logout {
+  float: right;
+  background: transparent;
+  color: white;
+  border: 1px solid #555;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* CARD */
 .card {
   background: #1e293b;
   padding: 20px;
   border-radius: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  transition: 0.2s;
 }
 
-.balance {
-  font-size: 24px;
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* TEXT */
+.income-text {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.expense-text {
+  color: #ef4444;
   font-weight: bold;
 }
 
@@ -65,7 +86,7 @@ input {
 button {
   width: 100%;
   padding: 14px;
-  margin-top: 5px;
+  margin-top: 8px;
   border-radius: 10px;
   border: none;
   font-size: 16px;
@@ -81,6 +102,14 @@ button {
   background: #ef4444;
 }
 
+.income-btn:hover {
+  background: #16a34a;
+}
+
+.expense-btn:hover {
+  background: #dc2626;
+}
+
 /* LIST */
 ul {
   padding: 0;
@@ -93,23 +122,30 @@ li {
   align-items: center;
   background: #1e293b;
   padding: 12px;
-  margin: 5px 0;
+  margin: 8px 0;
   border-radius: 10px;
 }
 
-.income {
-  color: #22c55e;
+/* ITEM */
+.item-left {
+  flex: 1;
 }
 
-.expense {
-  color: #ef4444;
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* DELETE BUTTON */
+.amount {
+  font-weight: bold;
+}
+
+/* DELETE */
 .delete {
   background: transparent;
-  color: red;
   border: none;
+  color: #ef4444;
   font-size: 18px;
   cursor: pointer;
 }
@@ -120,56 +156,142 @@ li {
     text-align: center;
     font-size: 20px;
   }
-
-  .balance {
-    font-size: 20px;
-  }
 }
 </style>
-
 </head>
 
 <body>
 
-<div class="header">
-  <div>💰 UDIN FINANCE</div>
-  <div class="balance" id="balance">Rp 0</div>
-
-  <div class="summary">
-    <div>Masuk: <span id="income">Rp 0</span></div>
-    <div>Keluar: <span id="expense">Rp 0</span></div>
-  </div>
-</div>
-
 <div class="container">
 
+  <!-- HEADER -->
+  <div class="header">
+    <button class="logout" onclick="logout()">Keluar</button>
+    <h1>💰 UDIN FINANCE</h1>
+  </div>
+
+  <!-- SALDO -->
+  <div class="card">
+    <h2>Rp <span id="balance">0</span></h2>
+    <p>Masuk: <span id="income" class="income-text">0</span></p>
+    <p>Keluar: <span id="expense" class="expense-text">0</span></p>
+  </div>
+
+  <!-- INPUT -->
   <div class="card">
     <h3>Tambah Transaksi</h3>
-
     <input id="title" placeholder="Keterangan">
     <input id="amount" type="number" placeholder="Jumlah">
-
-    <div class="row">
-      <button class="btn-income" onclick="addIncome()">+ 
+    <button class="income-btn" onclick="addTransaction('income')">+ 
 Pemasukan</button>
-      <button class="btn-expense" onclick="addExpense()">- 
+    <button class="expense-btn" onclick="addTransaction('expense')">- 
 Pengeluaran</button>
-    </div>
   </div>
 
+  <!-- LIST -->
   <div class="card">
-    <h3>Pemasukan</h3>
-    <ul id="income-list"></ul>
-  </div>
-
-  <div class="card">
-    <h3>Pengeluaran</h3>
-    <ul id="expense-list"></ul>
+    <h3>Pemasukan & Pengeluaran</h3>
+    <ul id="list"></ul>
   </div>
 
 </div>
 
-<script src="app.js"></script>
+<script>
+const API_URL = "https://rich-udin.onrender.com/api";
+const token = localStorage.getItem("token");
+
+if (!token) {
+  window.location.href = "/login.html";
+}
+
+// LOAD DATA
+async function loadData() {
+  const res = await fetch(API_URL + "/transactions", {
+    headers: { Authorization: token }
+  });
+  const data = await res.json();
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(item => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <div class="item-left">${item.title}</div>
+      <div class="item-right">
+        <span class="amount ${item.type === 'income' ? 'income-text' : 
+'expense-text'}">
+          Rp ${item.amount}
+        </span>
+        <button class="delete" 
+onclick="deleteData('${item._id}')">🗑</button>
+      </div>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+// ADD
+async function addTransaction(type) {
+  const title = document.getElementById("title").value;
+  const amount = document.getElementById("amount").value;
+
+  if (!title || !amount) {
+    alert("Isi dulu!");
+    return;
+  }
+
+  await fetch(API_URL + "/transactions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token
+    },
+    body: JSON.stringify({ title, amount, type })
+  });
+
+  loadData();
+  loadStats();
+}
+
+// DELETE
+async function deleteData(id) {
+  await fetch(API_URL + "/transactions/" + id, {
+    method: "DELETE",
+    headers: { Authorization: token }
+  });
+
+  loadData();
+  loadStats();
+}
+
+// STATS
+async function loadStats() {
+  const res = await fetch(API_URL + "/stats", {
+    headers: { Authorization: token }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("income").innerText = data.income;
+  document.getElementById("expense").innerText = data.expense;
+  document.getElementById("balance").innerText = data.balance;
+}
+
+// LOGOUT
+function logout() {
+  if (confirm("Yakin logout?")) {
+    localStorage.removeItem("token");
+    window.location.href = "/login.html";
+  }
+}
+
+// INIT
+loadData();
+loadStats();
+</script>
 
 </body>
 </html>
