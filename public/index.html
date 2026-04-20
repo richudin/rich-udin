@@ -189,11 +189,14 @@ Pengeluaran</button>
   </div>
 
   <!-- LIST -->
-  <div class="card">
-    <h3>Pemasukan & Pengeluaran</h3>
-    <ul id="list"></ul>
-  </div>
+<div class="card">
+  <h3 class="income-text">📗 Pemasukan</h3>
+  <ul id="incomeList"></ul>
+</div>
 
+<div class="card">
+  <h3 class="expense-text">📕 Pengeluaran</h3>
+  <ul id="expenseList"></ul>
 </div>
 
 <script>
@@ -214,10 +217,14 @@ async function loadData() {
   const res = await fetch(API_URL + "/transactions", {
     headers: { Authorization: token }
   });
+
   const data = await res.json();
 
-  const list = document.getElementById("list");
-  list.innerHTML = "";
+  const incomeList = document.getElementById("incomeList");
+  const expenseList = document.getElementById("expenseList");
+
+  incomeList.innerHTML = "";
+  expenseList.innerHTML = "";
 
   data.forEach(item => {
     const li = document.createElement("li");
@@ -234,9 +241,14 @@ onclick="deleteData('${item._id}')">🗑</button>
       </div>
     `;
 
-    list.appendChild(li);
+    if (item.type === "income") {
+      incomeList.appendChild(li);
+    } else {
+      expenseList.appendChild(li);
+    }
   });
 }
+
 
 // ADD
 async function addTransaction(type) {
