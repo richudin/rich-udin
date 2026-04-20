@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api";
+const API_URL = "https://rich-udin.onrender.com/api";
 
 // ================= AUTH =================
 const token = localStorage.getItem("token");
