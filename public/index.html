@@ -174,7 +174,47 @@ li {
     text-align: center;
     font-size: 20px;
   }
+
+.summary-card {
+  text-align: center;
 }
+
+.balance-title {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.balance-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  margin-bottom: 15px;
+}
+
+.eye-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.summary-item {
+  margin-top: 15px;
+  text-align: left;
+}
+
+.summary-item div:last-child {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 </style>
 </head>
 
@@ -189,11 +229,30 @@ li {
   </div>
 
   <!-- SALDO -->
-  <div class="card">
-    <h2>Rp <span id="balance">0</span></h2>
-    <p>Masuk: <span id="income" class="income-text">0</span></p>
-    <p>Keluar: <span id="expense" class="expense-text">0</span></p>
+<div class="card summary-card">
+
+  <div class="balance-title">
+    Saldo
   </div>
+
+  <div class="balance-row">
+    <span id="balance">Rp 0</span>
+    <button id="eyeBtn" class="eye-btn">👁️</button>
+  </div>
+
+  <hr>
+
+  <div class="summary-item">
+    <div class="income-text">📈 Total Masuk</div>
+    <div id="income">Rp 0</div>
+  </div>
+
+  <div class="summary-item">
+    <div class="expense-text">📉 Total Keluar</div>
+    <div id="expense">Rp 0</div>
+  </div>
+
+</div>
 
   <!-- INPUT -->
   <div class="card">
