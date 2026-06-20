@@ -27,7 +27,12 @@ const transactionSchema = new mongoose.Schema({
   username: String,
   title: String,
   amount: Number,
-  type: String
+  type: String,
+
+  date : {
+    type : Date,
+    default: Date.now
+  }
 });
 
 const Transaction = mongoose.model("Transaction", transactionSchema);
